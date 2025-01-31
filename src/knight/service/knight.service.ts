@@ -79,7 +79,7 @@ export class KnightsService {
       throw new NotFoundException(`Knight com ID ${id} não encontrado`);
     }
 
-    await this.cacheManager.set(cacheKey, knight, 60 * 1000); // Cache por 60 segundos
+    await this.cacheManager.set(cacheKey, knight, 60 * 1000);
     return knight;
   }
 
@@ -96,7 +96,6 @@ export class KnightsService {
       throw new BadRequestException('Já existe um cavaleiro com esse nickname');
     }
 
-    console.log(knightExists);
     const birthday = knightDto.birthday
       ? new Date(knightDto.birthday)
       : undefined;
@@ -127,7 +126,12 @@ export class KnightsService {
     if (!knight) {
       throw new NotFoundException('Knight not found');
     }
-
+    const knightExists = await this.knightModel
+      .exists({ nickname: updateKnightDto.nickname })
+      .exec();
+    if (knightExists) {
+      throw new BadRequestException('Já existe um cavaleiro com esse nickname');
+    }
     if (updateKnightDto.nickname) {
       knight.nickname = updateKnightDto.nickname;
       await knight.save();
