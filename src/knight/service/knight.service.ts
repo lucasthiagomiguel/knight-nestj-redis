@@ -142,12 +142,13 @@ export class KnightsService {
     throw new BadRequestException('Nickname is required');
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<string | undefined> {
     const knight = await this.findOne(id);
     knight.isHero = true;
     await knight.save();
 
     await this.cacheManager.del(`knight:${id}`); // Remove do cache individual
     await this.cacheManager.del('knights:*'); // Remove cache da listagem
+    if (knight.isHero) return 'knight';
   }
 }
