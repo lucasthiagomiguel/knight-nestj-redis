@@ -29,8 +29,8 @@ export class Knight extends Document {
   @Prop()
   exp?: number;
 
-  @Prop({ default: false }) // Adicionado
-  isHero: boolean; // Adicionado para corrigir o erro
+  @Prop({ default: false })
+  isHero: boolean;
 }
 
 export const KnightSchema = SchemaFactory.createForClass(Knight);
